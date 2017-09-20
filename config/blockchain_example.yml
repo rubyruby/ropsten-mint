@@ -1,0 +1,7 @@
+production:
+  account_address: ''
+  account_private_key: ''
+
+development:
+  account_address: ''
+  account_private_key: ''
