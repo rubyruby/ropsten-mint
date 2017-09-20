@@ -24,11 +24,13 @@ task :production do
   role :db,  domain, :primary => true
   before 'deploy:setup', 'rvm:install_rvm', 'rvm:install_ruby' # интеграция rvm с capistrano настолько хороша, что при выполнении cap deploy:setup установит себя и указанный в rvm_ruby_string руби.
 
+  set :keep_releases, 5
+
   before 'deploy:assets:precompile', 'deploy:symlink_shared'
 
   namespace :deploy do
     task :symlink_shared do
-      run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+      run "ln -nfs #{shared_path}/config/blockchain.yml #{release_path}/config/blockchain.yml"
       run "ln -nfs #{shared_path}/config/secrets.yml #{release_path}/config/secrets.yml"
     end
   end
@@ -44,24 +46,10 @@ task :production do
   namespace :deploy do
     namespace :assets do
       task :precompile, :roles => :web, :except => { :no_release => true } do
-        begin
-          from = source.next_revision(current_revision) # <-- Fail here at first-time deploy
-        rescue
-          err_no = true
-        end
-        if err_no || capture("cd #{latest_release} && #{source.local.log(from)} vendor/assets/ app/assets/ | wc -l").to_i > 0
-          run %Q{cd #{latest_release} && #{rake} RAILS_ENV=#{rails_env} #{asset_env} assets:precompile}
-        else
-          logger.info 'Skipping asset pre-compilation because there were no asset changes'
-        end
       end
     end
   end
 
-  before 'deploy:create_symlink', 'deploy:force_migrate'
-
-  # Далее идут правила для перезапуска unicorn. Их стоит просто принять на веру - они работают.
-  # В случае с Rails 3 приложениями стоит заменять bundle exec unicorn_rails на bundle exec unicorn
   namespace :deploy do
     task :restart do
       run "if [ -f #{unicorn_pid} ] && [ -e /proc/$(cat #{unicorn_pid}) ]; then kill -USR2 `cat #{unicorn_pid}`; else cd #{deploy_to}/current && bundle exec unicorn_rails -c #{unicorn_conf} -E #{rails_env} -D; fi"
