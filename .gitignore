@@ -20,3 +20,4 @@
 .byebug_history
 
 /config/blockchain.yml
+/config/secrets.yml
