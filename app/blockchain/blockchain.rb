@@ -16,7 +16,7 @@ class Blockchain
     balance < 0.2
   end
 
-  def sent_before?(address)
+  def can_send_to?(address)
     @contract_instance.call.can_send_to(address)
   end
 
