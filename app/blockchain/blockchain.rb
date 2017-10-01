@@ -17,7 +17,7 @@ class Blockchain
   end
 
   def sent_before?(address)
-    @contract_instance.call.sent_to(address)
+    @contract_instance.call.can_send_to(address)
   end
 
   def send(address)
