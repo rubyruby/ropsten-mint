@@ -1,4 +1,6 @@
 class Blockchain
+  GAS_PRICE = 101000000000
+
   def initialize
     @address = BLOCKCHAIN_CONFIG['account_address']
     @private_key_hex = BLOCKCHAIN_CONFIG['account_private_key']
@@ -10,6 +12,7 @@ class Blockchain
     contract_abi = contract_json['abi']
 
     @contract_instance = Ethereum::Contract.create(name: "Mint", address: contract_address, abi: contract_abi)
+    @contract_instance.gas_price = GAS_PRICE
   end
 
   def not_enough_ether?
