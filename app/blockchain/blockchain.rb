@@ -1,5 +1,6 @@
 class Blockchain
   GAS_PRICE = 200000000000
+  GAS_LIMIT = 1000000
 
   def initialize
     @address = BLOCKCHAIN_CONFIG['account_address']
@@ -13,6 +14,7 @@ class Blockchain
 
     @contract_instance = Ethereum::Contract.create(name: "Mint", address: contract_address, abi: contract_abi)
     @contract_instance.gas_price = GAS_PRICE
+    @contract_instance.gas_limit = GAS_LIMIT
   end
 
   def not_enough_ether?
