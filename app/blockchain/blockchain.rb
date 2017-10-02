@@ -1,5 +1,5 @@
 class Blockchain
-  GAS_PRICE = 101000000000
+  GAS_PRICE = 200000000000
 
   def initialize
     @address = BLOCKCHAIN_CONFIG['account_address']
