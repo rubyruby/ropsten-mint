@@ -5,7 +5,7 @@ class Blockchain
   def initialize
     @address = BLOCKCHAIN_CONFIG['account_address']
     @private_key_hex = BLOCKCHAIN_CONFIG['account_private_key']
-    @client = Ethereum::IpcClient.new
+    @client = Ethereum::IpcClient.new("#{ENV['HOME']}/.ethereum/testnet/geth.ipc", false)
     @formatter = Ethereum::Formatter.new
 
     contract_json = JSON.parse(File.read('app/blockchain/contracts/mint.json'))
